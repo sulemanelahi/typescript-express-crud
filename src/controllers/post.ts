@@ -1,16 +1,12 @@
 import { Request, Response } from 'express';
-import post from '../models/post';
+import { get, getById, addOrUpdate, remove as unpublish } from '../dynamodb';
 // -------------------------------------------
 
 // perform create operation
 export const create = async (req: Request, res: Response) => {
-  const { title, content, author } = req?.body;
+  const character = req.body;
   try {
-    await post.create({
-      title,
-      content,
-      author,
-    });
+    await addOrUpdate(character);
     return res.status(201).send('Data Saved');
   } catch (error) {
     console.error(`Error: ${error} `);
@@ -21,8 +17,8 @@ export const create = async (req: Request, res: Response) => {
 // perform read operation
 export const read = async (req: Request, res: Response) => {
   try {
-    const posts = await post.find({});
-    return res.status(200).send(posts);
+    const characters = await get();
+    return res.status(200).send(characters);
   } catch (error) {
     console.error(`Error: ${error} `);
     return res.status(400).send(error);
@@ -31,9 +27,12 @@ export const read = async (req: Request, res: Response) => {
 
 // perform update operation
 export const update = async (req: Request, res: Response) => {
+  const character = req?.body;
+  const { id } = req.params;
+  character.id = id.toString();
+
   try {
-    const { id } = req.params;
-    await post.findByIdAndUpdate(id, req.body);
+    await addOrUpdate(character);
     return res.status(200).send('Successfully updated');
   } catch (error) {
     console.error(`Error: ${error} `);
@@ -43,9 +42,9 @@ export const update = async (req: Request, res: Response) => {
 
 // perform delete operation
 export const remove = async (req: Request, res: Response) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    await post.findByIdAndDelete(id);
+    await unpublish(id);
     return res.status(200).send('Successfully removed');
   } catch (error) {
     console.error(`Error: ${error} `);
@@ -53,18 +52,12 @@ export const remove = async (req: Request, res: Response) => {
   }
 };
 
-// perform vote polling operation
-export const pollVote = async (req: Request, res: Response) => {
+// perform read operation
+export const readById = async (req: Request, res: Response) => {
+  const { id } = req?.params;
   try {
-    const { id } = req.params;
-    const { vote } = req.body;
-
-    if (vote) {
-      await post.findByIdAndUpdate(id, { $inc: { vote: 1 } });
-      return res.status(200).send('vote up');
-    }
-    await post.findByIdAndUpdate(id, { $inc: { vote: -1 } });
-    return res.status(200).send('vote down');
+    const characters = await getById(id.toString());
+    return res.status(200).send(characters);
   } catch (error) {
     console.error(`Error: ${error} `);
     return res.status(400).send(error);
