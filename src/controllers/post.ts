@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import Post from '../models/post';
 // -------------------------------------------
 
-// // perform create operation
+// perform create operation
 export const create = async (req: Request, res: Response) => {
   const post = new Post(req.body);
   try {
@@ -13,7 +13,7 @@ export const create = async (req: Request, res: Response) => {
   }
 };
 
-// // perform read operation
+// perform read operation
 export const read = async (req: Request, res: Response) => {
   try {
     const characters = await Post.scan().exec();
@@ -24,7 +24,7 @@ export const read = async (req: Request, res: Response) => {
   }
 };
 
-// // perform update operation
+// perform update operation
 export const update = async (req: Request, res: Response) => {
   const { body } = req;
   const { id } = req.params;
@@ -38,7 +38,7 @@ export const update = async (req: Request, res: Response) => {
   }
 };
 
-// // perform delete operation
+// perform delete operation
 export const remove = async (req: Request, res: Response) => {
   const { id, title } = req.params;
   try {
