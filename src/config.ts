@@ -3,6 +3,7 @@ dotenv.config();
 // ------------------------------------------------------------
 
 export const PORT = process.env.PORT;
+export const DynamoLocalURL = process.env.DYNAMO_URL;
 export const MONGO_URI = process.env.MONGO_URI;
 const ACCESS_KEY_ID: any = process.env.AWS_ACCESS_KEY_ID;
 const SECRET_ACCESS_KEY: any = process.env.AWS_SECRET_ACCESS_KEY;

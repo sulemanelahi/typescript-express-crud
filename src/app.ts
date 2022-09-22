@@ -1,8 +1,11 @@
+import * as dynamoose from 'dynamoose';
 import express from 'express';
 import urlRoute from './routes/post';
-import { PORT } from './config';
+import { PORT, DynamoLocalURL } from './config';
 import cors from 'cors';
 // ------------------------------------------------------------
+
+dynamoose.aws.ddb.local(DynamoLocalURL);
 
 const app = express();
 
